@@ -51,13 +51,7 @@ immediate code updates.
 
 ## 🏗 Framework Flow
 
-Test Case
-↓
-Page Object
-↓
-SelfHeal Logic
-↓
-Selenium WebDriver
+Test Case --> Page Object --> SelfHeal Logic --> Selenium WebDriver
 
 
 ---
