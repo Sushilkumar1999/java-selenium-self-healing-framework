@@ -1,89 +1,158 @@
 # Selenium Self-Healing Automation Framework (Stage 1)
 
 ## 📌 Project Overview
-This project demonstrates a **custom Selenium automation framework** built using  
-**Java, TestNG, and Maven**, with a focus on improving test stability through a  
-**self-healing locator mechanism**.
 
-The framework is designed to handle **UI locator changes gracefully**, reducing
-test failures and manual maintenance effort in real-world automation projects.
+This project showcases a **custom Selenium automation framework** built using **Java, TestNG, and Maven**, with a strong focus on improving test stability through a **custom self-healing locator mechanism**.
+
+The framework is designed to handle **minor UI locator changes gracefully**, reducing flaky test failures and minimizing manual maintenance—a common challenge in real-world automation projects.
 
 ---
 
-## 🎯 Project Goal
-- Build a clean, maintainable Selenium framework
-- Implement a **custom self-healing mechanism** for UI locators
-- Demonstrate strong understanding of:
-  - Framework design
-  - Page Object Model (POM)
-  - TestNG lifecycle
-  - Maven-based execution
-  - Failure handling & reporting
+## 🎯 Project Goals
+
+* Build a clean, scalable, and maintainable Selenium automation framework
+* Implement a **custom self-healing mechanism** for UI locators (without third-party tools)
+* Demonstrate strong hands-on understanding of:
+
+  * Framework architecture and design
+  * Page Object Model (POM)
+  * TestNG lifecycle and listeners
+  * Maven-based execution
+  * Failure handling and reporting
 
 ---
 
 ## 🧩 Key Features
-- Selenium WebDriver with Java
-- TestNG for test execution
-- Maven for build and dependency management
-- Page Object Model (POM)
-- **Custom self-healing logic** for locators
-- Retry mechanism for `click` and `sendText`
-- TestNG Listener with:
-  - Extent Reports
-  - Screenshot capture on failure
-- CI-friendly execution using `mvn test`
+
+* Selenium WebDriver with Java
+* TestNG for test execution and lifecycle management
+* Maven for build and dependency management
+* Page Object Model (POM) for clean separation of concerns
+* **Custom self-healing locator logic**
+* Retry mechanism for critical actions (`click`, `sendText`)
+* TestNG Listener with:
+
+  * Extent Reports
+  * Screenshot capture on test failure
+* CI-friendly execution using `mvn clean test`
 
 ---
 
-## 🔄 Self-Healing Logic (Stage 1)
-Instead of relying on a single locator, the framework:
+## 🧠 Why Self-Healing?
 
-1. Maintains **multiple locator strategies** for the same UI element  
-2. Tries locators **one by one at runtime**
-3. Proceeds with execution when a fallback locator works
-4. Fails the test **only if all locators fail**
+UI locators often break due to small front-end changes (IDs, attributes, DOM restructuring), causing unnecessary test failures. Instead of failing immediately, this framework attempts **alternative locators at runtime**, allowing tests to continue execution whenever possible.
 
-This approach helps tests survive minor UI changes without requiring
-immediate code updates.
+⚠️ **Note:** This is a **custom deterministic self-healing implementation**, not an AI/ML-based solution (e.g., Healenium). The goal is control, transparency, and interview-ready clarity.
 
 ---
 
-## 🏗 Framework Flow
+## 🔄 Self-Healing Mechanism (Stage 1)
 
-Test Case --> Page Object --> SelfHeal Logic --> Selenium WebDriver
+The self-healing logic works as follows:
 
+1. Each UI element is associated with **multiple locator strategies** (primary + fallbacks)
+2. The framework attempts to locate the element using the **primary locator**
+3. If it fails (e.g., `NoSuchElementException`, `TimeoutException`), fallback locators are tried **sequentially**
+4. Execution continues as soon as a valid locator is found
+5. The test **fails only if all locators fail**
+
+### Example Usage
+
+```java
+click(
+    By.name("login-button"),   // intentionally broken
+    By.xpath("//input[@value='Login']")
+);
+```
+
+This approach allows the test to survive minor UI changes without immediate code updates.
+
+---
+
+## 🏗 Framework Architecture
+
+```
+Test Case
+   ↓
+Page Object
+   ↓
+Self-Healing Logic
+   ↓
+Selenium WebDriver
+```
+
+Each layer has a single responsibility, keeping the framework modular and easy to extend.
 
 ---
 
 ## ❌ Negative Test Scenario (Proof of Healing)
-A negative test case is included where:
-- The **primary locator is intentionally incorrect**
-- The framework automatically retries a fallback locator
-- The test continues execution **without failing**
 
-This demonstrates the self-healing behavior in action.
+A dedicated negative test case is included to demonstrate self-healing behavior:
+
+* The **primary locator** for the login button is intentionally incorrect
+* Selenium fails to locate the element using the primary locator
+* The framework automatically retries using **fallback locators**
+* A valid fallback locator succeeds
+* The test continues execution **without failure**
+
+This confirms that the self-healing logic works as intended.
 
 ---
 
 ## ▶️ How to Run the Tests
 
 ### Prerequisites
-- Java 17 or above
-- Maven installed
-- Chrome browser
 
-### Run Command
+* Java 17 or higher
+* Maven installed and configured
+* Google Chrome browser
+
+### Test Execution
+
 ```bash
 mvn clean test
 ```
 
 ### 🌐 Test Application
+
+```
 https://www.saucedemo.com
-(A public demo application used for automation practice)
+```
 
-### 📂 Project Structure (High Level)
+A public demo application commonly used for Selenium automation practice.
 
-<img width="468" height="507" alt="image" src="https://github.com/user-attachments/assets/177070df-135e-403e-a8cf-5c7dd3d436ac" />
+---
 
+## 📂 Project Structure (High Level)
 
+```
+src/main/java
+ ├── base        → Driver setup and core framework logic
+ ├── pages       → Page Object classes
+ ├── utils       → Self-healing utilities and helpers
+
+src/test/java
+ ├── tests       → TestNG test cases
+ ├── listeners   → TestNG listeners (Extent Reports, screenshots)
+```
+
+---
+
+## 🚀 Future Enhancements (Planned)
+
+* Persist successful fallback locators for future runs
+* Locator confidence scoring
+* External locator storage (JSON / YAML)
+* Parallel execution support
+* Cross-browser self-healing
+* CI integration with Jenkins/GitHub Actions
+
+---
+
+## 📌 Summary
+
+This project demonstrates a **practical, interview-ready Selenium framework** that addresses real-world automation challenges. The custom self-healing mechanism improves test resilience while keeping the implementation simple, transparent, and fully under developer control.
+
+---
+
+⭐ If you find this project useful, feel free to fork, explore, or suggest improvements.
