@@ -84,14 +84,6 @@ https://www.saucedemo.com
 
 ### 📂 Project Structure (High Level)
 
-src
- ├── main
- │   └── java
- │       ├── base
- │       ├── logic
- │       ├── pageObject
- │       └── listener
- └── test
-     └── java
-         └── UITestCase
+<img width="468" height="507" alt="image" src="https://github.com/user-attachments/assets/177070df-135e-403e-a8cf-5c7dd3d436ac" />
+
 
