@@ -189,7 +189,7 @@ src/test/java
 
 ## 📌 Summary
 
-This project demonstrates a **practical, interview-ready Selenium framework** that addresses real-world automation challenges. The custom self-healing mechanism improves test resilience while keeping the implementation simple, transparent, and fully under developer control.
+This project demonstrates a **practical, simple Selenium framework** that addresses real-world automation challenges. The custom self-healing mechanism improves test resilience while keeping the implementation simple, transparent, and fully under developer control.
 
 ---
 
