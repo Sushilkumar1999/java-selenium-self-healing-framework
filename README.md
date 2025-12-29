@@ -65,6 +65,25 @@ click(
 );
 ```
 
+### 🧪 Self-Healing Utility (Sample)
+
+```java
+	public void click(String[] locators) {
+		for (String locator : locators) {
+			try {
+				By byEle = LocatorUtil.getBy(locator);
+				driver.findElement(byEle).click();
+				System.out.println("Locator worked for click : " + locator);
+				return;
+			} catch (Exception e) {
+				System.out.println("Locator failed for click : " + locator);
+			}
+		}
+		throw new RuntimeException("All locators failed");
+	}
+
+```
+
 This approach allows the test to survive minor UI changes without immediate code updates.
 
 ---
