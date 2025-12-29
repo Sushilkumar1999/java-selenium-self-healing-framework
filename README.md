@@ -42,8 +42,8 @@ The framework is designed to handle **minor UI locator changes gracefully**, red
 
 UI locators often break due to small front-end changes (IDs, attributes, DOM restructuring), causing unnecessary test failures. Instead of failing immediately, this framework attempts **alternative locators at runtime**, allowing tests to continue execution whenever possible.
 
-⚠️ **Note:** This is a **custom deterministic self-healing implementation**, not an AI/ML-based solution (e.g., Healenium). The goal is control, transparency.
 ---
+### Note: This is a custom deterministic self-healing implementation , not an AI/ML-based solution (e.g., Healenium). The goal is control, transparency.
 
 ## 🔄 Self-Healing Mechanism (Stage 1)
 
