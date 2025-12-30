@@ -1,10 +1,10 @@
 [
   {
-    "userName": "standard_user",
+    "userName": "standard_userr",
     "password": "secret_sauce"
   },
-  {
-    "userName": "error_user",
+    {
+    "userName": "standard_user",
     "password": "secret_sauce"
   }
 ]

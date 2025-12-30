@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
@@ -42,46 +44,52 @@ public class Base {
 			driver = new EdgeDriver();
 		}
 		driver.manage().window().maximize();
+//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		return driver;
 	}
-	
+
 	@Parameters("browserName")
-	@BeforeMethod(alwaysRun=true)
+	@BeforeMethod(alwaysRun = true)
 	public LogInPage launchApplication(String browserName) throws IOException {
 		driver = initDriver(browserName);
-		login= new LogInPage(driver);
+		login = new LogInPage(driver);
 		login.goTo(getDataFromProperties("URL"));
 		return login;
 	}
-	
+
 	@AfterMethod
 	public void tearDown() {
 		driver.quit();
 	}
-	
+
 	public List<HashMap<String, String>> getDataFromJsonFile(String filePath) throws IOException {
 		// Read JSON to String
-		String dataJson=FileUtils.readFileToString(new File(filePath),StandardCharsets.UTF_8);
+		String dataJson = FileUtils.readFileToString(new File(filePath), StandardCharsets.UTF_8);
 		// Convert String to HashMap -- Here jackson databinder is being used.
-		ObjectMapper mapper= new ObjectMapper();
-		List<HashMap<String,String>>data=mapper.readValue(dataJson, new TypeReference<List<HashMap<String,String>>>(){});
+		ObjectMapper mapper = new ObjectMapper();
+		List<HashMap<String, String>> data = mapper.readValue(dataJson,
+				new TypeReference<List<HashMap<String, String>>>() {
+				});
 		return data;
 	}
-	
+
 	public String getDataFromProperties(String Data) throws IOException {
-		Properties prop=new Properties();
-		String filePath=System.getProperty("user.dir")+"//src//test//resources//globalProperties//Globaldata.properties";
-		FileInputStream fis=new FileInputStream(filePath);
+		Properties prop = new Properties();
+		String filePath = System.getProperty("user.dir")
+				+ "//src//test//resources//globalProperties//Globaldata.properties";
+		FileInputStream fis = new FileInputStream(filePath);
 		prop.load(fis);
 		return prop.getProperty(Data);
 	}
-	
-	public  String getScreenshot(String testCaseName,WebDriver driver) throws IOException {
+
+	public String getScreenshot(String testCaseName, WebDriver driver) throws IOException {
 		TakesScreenshot tS = (TakesScreenshot) driver;
 		File sourceScreenshot = tS.getScreenshotAs(OutputType.FILE);
-		File destinationScreenshot = new File(System.getProperty("user.dir") + "//Reports" + testCaseName + ".png");
-		FileUtils.copyFile(sourceScreenshot, destinationScreenshot);
-		return System.getProperty("user.dir") + "//Reports" + testCaseName + ".png";
+		String destinationPath = System.getProperty("user.dir") + File.separator + "Reports" + File.separator
+				+ testCaseName + ".png";
+
+		FileUtils.copyFile(sourceScreenshot, new File(destinationPath));
+		return destinationPath;
 	}
 
 }

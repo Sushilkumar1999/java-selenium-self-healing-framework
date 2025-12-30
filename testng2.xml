@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests" thread-count="2">
+<listeners>
+<listener class-name="autoheal.listener.in.Listeners"></listener>
+</listeners>
+    <test thread-count="5" name="Running in chrome">
+  <parameter name="browserName" value="chrome"></parameter>
+    <classes>
+      <class name="autoheal.UITestCase.in.UITest"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
