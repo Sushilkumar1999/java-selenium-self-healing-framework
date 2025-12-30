@@ -52,7 +52,7 @@ The framework is designed to handle **minor UI locator changes gracefully** and 
 
 UI locators often break due to small front-end changes (IDs, attributes, DOM restructuring), causing unnecessary test failures. Instead of failing immediately, this framework attempts **alternative locators at runtime**, allowing tests to continue execution whenever possible.
 
-⚠️ **Note:** This is a **custom deterministic self-healing implementation**, not an AI/ML-based solution (e.g., Healenium). The goal is transparency, control, and interview-ready clarity.
+⚠️ **Note:** This is a **custom deterministic self-healing implementation**, not an AI/ML-based solution (e.g., Healenium). The goal is transparency, control .
 
 ---
 
@@ -218,6 +218,6 @@ src/test/java
 
 ## 📌 Summary
 
-This project demonstrates a **practical, interview-ready Selenium automation framework** with **custom self-healing logic and thread-safe parallel execution**. It addresses real-world automation challenges while keeping the implementation simple, transparent, and fully under developer control.
+This project demonstrates a **practical, simple Selenium automation framework** with **custom self-healing logic and thread-safe parallel execution**. It addresses real-world automation challenges while keeping the implementation simple, transparent, and fully under developer control.
 
 ⭐ If you find this project useful, feel free to fork or contribute.
