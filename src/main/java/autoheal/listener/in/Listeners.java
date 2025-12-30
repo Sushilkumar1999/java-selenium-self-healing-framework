@@ -36,11 +36,7 @@ public class Listeners extends Base implements ITestListener  {
 	public void onTestFailure(ITestResult result) {
 		extentList.get().fail(result.getThrowable());
 		String sSPath=null;
-		try {
-			driver = (WebDriver) result.getTestClass().getRealClass().getField("driver").get(result.getInstance());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		WebDriver driver = Base.driver.get();
 		try {
 			sSPath=getScreenshot(result.getMethod().getMethodName(),driver);
 		} catch (IOException e) {
@@ -58,5 +54,6 @@ public class Listeners extends Base implements ITestListener  {
 	@Override
 	public void onFinish(ITestContext context) {
 		extent.flush();
+		extentList.remove();
 	}
 }

@@ -29,37 +29,45 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Base {
 
-	public WebDriver driver;
+	public static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 	public LogInPage login;
 
-	public WebDriver initDriver(String browserName) {
+	public WebDriver getDriver() {
+		return driver.get();
+	}
+
+	public void initDriver(String browserName) {
+		WebDriver localDriver = null;
 		if (browserName.equalsIgnoreCase("chrome")) {
 			WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver();
+			localDriver = new ChromeDriver();
 		} else if (browserName.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
-			driver = new FirefoxDriver();
+			localDriver = new FirefoxDriver();
 		} else if (browserName.equalsIgnoreCase("edge")) {
 			WebDriverManager.edgedriver().setup();
-			driver = new EdgeDriver();
+			localDriver = new EdgeDriver();
+		} else {
+			throw new RuntimeException("Invalid browser name: " + browserName);
 		}
-		driver.manage().window().maximize();
-//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-		return driver;
+		localDriver.manage().window().maximize();
+//		localDriver .manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.set(localDriver);
 	}
 
 	@Parameters("browserName")
 	@BeforeMethod(alwaysRun = true)
 	public LogInPage launchApplication(String browserName) throws IOException {
-		driver = initDriver(browserName);
-		login = new LogInPage(driver);
+		initDriver(browserName);
+		login = new LogInPage(getDriver());
 		login.goTo(getDataFromProperties("URL"));
 		return login;
 	}
 
 	@AfterMethod
 	public void tearDown() {
-		driver.quit();
+		getDriver().quit();
+		driver.remove();
 	}
 
 	public List<HashMap<String, String>> getDataFromJsonFile(String filePath) throws IOException {

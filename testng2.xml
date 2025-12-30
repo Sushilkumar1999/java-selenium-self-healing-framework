@@ -10,4 +10,10 @@
       <class name="autoheal.UITestCase.in.UITest"/>
     </classes>
   </test> <!-- Test -->
+  <test thread-count="5" name="Running in edge">
+  <parameter name="browserName" value="edge"></parameter>
+    <classes>
+      <class name="autoheal.UITestCase.in.UITest"/>
+    </classes>
+  </test> <!-- Test -->
 </suite> <!-- Suite -->

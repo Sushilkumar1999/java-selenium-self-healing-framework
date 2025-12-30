@@ -24,7 +24,7 @@ public class UITest extends Base {
 		login.sendTextForUserName(input.get("userName"));
 		login.sendTextForPassWord(input.get("password"));
 		login.clickLogInBtn();
-		Assert.assertEquals(driver.getCurrentUrl(), getDataFromProperties("InventoryURL"));
+		Assert.assertEquals(getDriver().getCurrentUrl(), getDataFromProperties("InventoryURL"));
 	}
 
 	@DataProvider
@@ -38,7 +38,7 @@ public class UITest extends Base {
 	public void submitOrder() throws IOException {
 		// "Here the userName and password being read from properties file"
 		ProductSelectionPage ps = login.aLogin(getDataFromProperties("UserName"), getDataFromProperties("Password"));
-		Assert.assertEquals(driver.getCurrentUrl(), getDataFromProperties("InventoryURL"));
+		Assert.assertEquals(getDriver().getCurrentUrl(), getDataFromProperties("InventoryURL"));
 		WebElement disiredProduct = ps.getDisiredProduct(getDataFromProperties("DProductName"));
 		CartPage cp = ps.selectDisiredProduct(disiredProduct);
 		Assert.assertTrue(cp.checkIfDPThere(getDataFromProperties("DProductName")));
