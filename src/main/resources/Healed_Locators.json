@@ -1,0 +1,1 @@
+{"password":{"xpath://input[@placeholder='Password']":4},"loginBtn":{"xpath://input[@value='Login']":4},"userName":{"xpath://input[@placeholder='Username']":4}}

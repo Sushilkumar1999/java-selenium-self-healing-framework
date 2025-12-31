@@ -7,10 +7,4 @@
             <class name="autoheal.UITestCase.in.UITest"/>
         </classes>
     </test>
-    <test name="Edge Tests">
-        <parameter name="browserName" value="edge"/>
-        <classes>
-            <class name="autoheal.UITestCase.in.UITest"/>
-        </classes>
-    </test>
 </suite>

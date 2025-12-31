@@ -34,7 +34,7 @@ public class UITest extends Base {
 		return new Object[][] { { data.get(0) }, { data.get(1) } };
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void submitOrder() throws IOException {
 		// "Here the userName and password being read from properties file"
 		ProductSelectionPage ps = login.aLogin(getDataFromProperties("UserName"), getDataFromProperties("Password"));

@@ -15,8 +15,8 @@ public class LogInPage {
 	}
 
 	// Possible locators for LoginButton in LoginPage.
-	String[] userNameLocator = { "id:user-name", "xpath://input[@placeholder='Username']" };
-	String[] passWord = { "id:password", "xpath://input[@placeholder='Password']" };
+	String[] userNameLocator = { "id:user-namee", "xpath://input[@placeholder='Username']" };
+	String[] passWord = { "id:passwordd", "xpath://input[@placeholder='Password']" };
 	// In LoginButtonLocator the primary locator (id:login-buttonn) is deliberately
 	// broken.
 	// If it fails, the framework automatically retries the secondary
@@ -30,17 +30,17 @@ public class LogInPage {
 
 	// This method calls sendText method which is implemented in selfHeal class.
 	public void sendTextForUserName(String text) {
-		sh.sendText(userNameLocator, text);
+		sh.sendText(userNameLocator, text, "userName");
 	}
 
 	// This method calls sendText method which is implemented in selfHeal class.
 	public void sendTextForPassWord(String text) {
-		sh.sendText(passWord, text);
+		sh.sendText(passWord, text, "password");
 	}
 
 	// This method calls click method which is implemented in SelfHeal class.
 	public void clickLogInBtn() {
-		sh.click(LoginButtonLocator);
+		sh.click(LoginButtonLocator,"loginBtn");
 	}
 
 	public ProductSelectionPage aLogin(String userName, String password) {
