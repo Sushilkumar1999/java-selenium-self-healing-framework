@@ -15,6 +15,8 @@ public class HealingStore {
 	// Here object mapper from jackson data bind is used
 	private static ObjectMapper mapper = new ObjectMapper();
 
+	private static final int finalMaxScore = 5;
+
 	// This method converts JSON file into hash map.
 	private static HashMap<String, Map<String, Integer>> readFile() {
 		try {
@@ -37,7 +39,11 @@ public class HealingStore {
 			Map<String, Map<String, Integer>> data = readFile();
 			data.putIfAbsent(elementName, new HashMap<>());
 			Map<String, Integer> locatorMap = data.get(elementName);
-			locatorMap.put(locator, locatorMap.getOrDefault(locator, 0) + 1);
+			int currentScore = locatorMap.getOrDefault(locatorMap, 0);
+			if (currentScore < finalMaxScore)
+				locatorMap.put(locator, currentScore + 1);
+			else
+				locatorMap.put(locator, finalMaxScore);
 
 			// saving the above hash map to our file with the help of mapper
 			File file = new File(filePath);
@@ -52,9 +58,27 @@ public class HealingStore {
 		HashMap<String, Map<String, Integer>> data = readFile();
 		Map<String, Integer> locatorMap = data.get(elementName);
 		if (locatorMap == null || locatorMap.isEmpty()) {
-	        return null;
-	    }
+			return null;
+		}
 		return locatorMap.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+	}
+
+	// This method decreases the locator score if it fails during run time.
+	public static void decreaseScore(String elementName, String Locator) {
+		HashMap<String, Map<String, Integer>> data = readFile();
+		Map<String, Integer> locatorMap = data.get(elementName);
+
+		if (locatorMap == null || !locatorMap.containsKey(Locator))
+			return;
+		int locatorScore = locatorMap.get(Locator);
+		locatorMap.put(Locator, Math.max(0, locatorScore - 1));
+
+		try {
+			File file = new File(filePath);
+			mapper.writeValue(file, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -20,7 +20,7 @@ public class ExtentReportTestNG {
 	ExtentReports extentReport=new ExtentReports();
 	extentReport.attachReporter(reporter);
 	extentReport.setSystemInfo("Tester", "	Sushil");
-	extentReport.setSystemInfo("Browser", "Chrome");
+	extentReport.setSystemInfo("Browser", "Chrome/edge/firefox");
 	return extentReport;
 	}
 }

@@ -16,7 +16,7 @@ public class LogInPage {
 
 	// Possible locators for LoginButton in LoginPage.
 	String[] userNameLocator = { "id:user-namee", "xpath://input[@placeholder='Username']" };
-	String[] passWord = { "id:passwordd", "xpath://input[@placeholder='Password']" };
+	String[] passWord = { "id:password", "xpath://input[@placeholder='Password']" };
 	// In LoginButtonLocator the primary locator (id:login-buttonn) is deliberately
 	// broken.
 	// If it fails, the framework automatically retries the secondary
