@@ -1,4 +1,6 @@
-# Selenium Self-Healing Automation Framework (Stage 1)
+# Selenium Self-Healing Automation Framework (Stage 1 & Stage 2)
+
+## 🔗 Technology Stack
 
 ![Java](https://img.shields.io/badge/Java-17+-orange)
 ![Selenium](https://img.shields.io/badge/Selenium-WebDriver-green)
@@ -9,64 +11,76 @@
 
 ## 📌 Project Overview
 
-This project showcases a **custom Selenium automation framework** built using **Java, TestNG, and Maven**, with a strong focus on improving test stability through a **custom self-healing locator mechanism** and **thread-safe parallel execution**.
+This project demonstrates a **custom Selenium automation framework** built using **Java, TestNG, and Maven**, with a strong focus on **test stability, self-healing locators, and reliable parallel execution**.
 
-The framework is designed to handle **minor UI locator changes gracefully** and to execute **reliably in parallel across multiple browsers**, reducing flaky test failures and minimizing manual maintenance—a common challenge in real-world automation projects.
+The framework is designed to handle **real-world UI changes gracefully**, learn from past executions, and run **safely in parallel across multiple browsers**. Over time, the framework becomes **more stable** by remembering which locators work best.
+
+This project is implemented in **stages**, with each stage adding practical capabilities on top of a clean base framework.
 
 ---
 
 ## 🎯 Project Goals
 
 * Build a clean, scalable, and maintainable Selenium automation framework
-* Implement a **custom self-healing mechanism** for UI locators (without third-party tools)
-* Enable **true thread-safe parallel execution** using TestNG
+* Implement a **custom self-healing mechanism** (without third-party tools)
+* Enable **thread-safe parallel execution** using TestNG
+* Allow the framework to **learn from previous runs**
+* Keep the design **simple, deterministic, and transparent**
 * Demonstrate strong hands-on understanding of:
 
-  * Framework architecture and design
+  * Framework architecture
   * Page Object Model (POM)
-  * TestNG lifecycle, listeners, and retry logic
+  * TestNG lifecycle, listeners, retry logic
   * Maven-based execution
-  * Failure handling, reporting, and screenshots
+  * Reporting, screenshots, and failure handling
 
 ---
 
 ## 🧩 Key Features
 
 * Selenium WebDriver with Java
-* TestNG for test execution and lifecycle management
+* TestNG for execution and lifecycle management
 * Maven for build and dependency management
 * Page Object Model (POM)
 * **Custom self-healing locator logic**
 * Retry mechanism for critical actions (`click`, `sendText`)
 * **Thread-safe WebDriver management using `ThreadLocal<WebDriver>`**
-* **Stable parallel execution across multiple browsers (Chrome & Edge)**
+* **Stable parallel execution across browsers (Chrome & Edge)**
 * TestNG Listener with:
 
   * Extent Reports
-  * Screenshot capture on test failure (thread-safe)
+  * Thread-safe screenshot capture
 * CI-friendly execution using `mvn clean test`
 
 ---
 
 ## 🧠 Why Self-Healing?
 
-UI locators often break due to small front-end changes (IDs, attributes, DOM restructuring), causing unnecessary test failures. Instead of failing immediately, this framework attempts **alternative locators at runtime**, allowing tests to continue execution whenever possible.
+In real applications, UI locators often break due to:
 
-⚠️ **Note:** This is a **custom deterministic self-healing implementation**, not an AI/ML-based solution (e.g., Healenium). The goal is transparency, control .
+* Small attribute changes
+* DOM restructuring
+* UI refactoring
+
+Instead of failing immediately, this framework **tries alternative locators at runtime**, allowing tests to continue whenever possible.
+
+⚠️ **Note:** This is a **custom deterministic self-healing implementation**, not an AI/ML-based solution. The goal is full control, predictability, and clarity.
 
 ---
 
-## 🔄 Self-Healing Mechanism (Stage 1)
+## 🔄 Self-Healing Mechanism — Stage 1 (Fallback Healing)
 
-The self-healing logic works as follows:
+Stage 1 focuses on **surviving locator changes**.
 
-1. Each UI element is associated with **multiple locator strategies** (primary + fallbacks)
-2. The framework attempts to locate the element using the **primary locator**
-3. If it fails (e.g., `NoSuchElementException`, `TimeoutException`), fallback locators are tried **sequentially**
-4. Execution continues as soon as a valid locator is found
-5. The test **fails only if all locators fail**
+### How it works:
 
-### Example Usage
+1. Each UI element has **multiple locator strategies** (primary + fallbacks)
+2. The framework tries locators **one by one**
+3. If the primary locator fails, fallback locators are attempted
+4. Execution continues as soon as a locator works
+5. The test fails **only if all locators fail**
+
+### Example
 
 ```java
 String[] loginButtonLocators = {
@@ -74,42 +88,88 @@ String[] loginButtonLocators = {
     "xpath://input[@value='Login']"
 };
 
-selfHeal.click(loginButtonLocators);
+selfHeal.click(loginButtonLocators, "loginBtn");
 ```
 
 ---
 
-## 🧪 Self-Healing Utility (Sample)
+## 🧠 Self-Healing Mechanism — Stage 2 (Learning & Confidence Scoring)
 
-```java
-public void click(String[] locators) {
-    for (String locator : locators) {
-        try {
-            By byEle = LocatorUtil.getBy(locator);
-            getDriver().findElement(byEle).click();
-            System.out.println("Locator worked for click : " + locator);
-            return;
-        } catch (Exception e) {
-            System.out.println("Locator failed for click : " + locator);
-        }
-    }
-    throw new RuntimeException("All locators failed");
+Stage 2 adds **learning behavior** to the framework.
+
+Instead of forgetting what worked, the framework **remembers successful locators across runs**.
+
+### What Stage 2 adds:
+
+* Persistent storage of successful locators in JSON
+* **Confidence score** for each locator
+* Reuse of the **most reliable locator first**
+* **Score increase on success**
+* **Score decrease on failure**
+* **Maximum confidence cap** to prevent overfitting
+
+---
+
+## 📊 Confidence Scoring Logic (Simple Rules)
+
+* Locator works → **score +1**
+* Locator fails → **score -1** (minimum 0)
+* Maximum score capped at **10**
+* Locator with highest score is tried first
+
+This keeps learning:
+
+* Stable
+* Predictable
+* Self-correcting over time
+
+---
+
+## 📁 Healed Locator Storage (Example)
+
+```json
+{
+  "password": {
+    "xpath://input[@placeholder='Passwordd']": 7,
+    "id:password": 3
+  },
+  "loginBtn": {
+    "xpath://input[@value='Login']": 10
+  },
+  "userName": {
+    "xpath://input[@placeholder='Username']": 10
+  }
 }
 ```
+
+This file shows **which locators worked most often** and how confident the framework is about them.
+
+---
+
+## 🧾 Healing Visibility in Reports
+
+Every healing decision is logged into **Extent Reports**, making test behavior easy to understand.
+
+### Example Report Logs
+
+* Healed locator worked for userName
+* Healed locator failed for password → score reduced
+* Fallback locator worked for password
+* Healed locator worked for loginBtn
+
+This makes debugging and framework behavior **transparent and explainable**.
 
 ---
 
 ## 🧵 Thread-Safe Parallel Execution
 
-The framework supports **safe and stable parallel execution** using:
+The framework supports **safe parallel execution** using:
 
-* `ThreadLocal<WebDriver>` to maintain **one browser per test thread**
-* Thread-safe driver initialization and cleanup in the Base class
-* Thread-safe screenshot capture in TestNG listeners
+* `ThreadLocal<WebDriver>` (one browser per thread)
+* Thread-safe driver setup and teardown
+* Thread-safe screenshots and reporting
 
-Parallel execution is configured using TestNG and allows the same test suite to run simultaneously on **multiple browsers**.
-
-### Sample Parallel TestNG Configuration
+### Sample TestNG Parallel Configuration
 
 ```xml
 <suite name="Suite" parallel="tests" thread-count="2">
@@ -132,6 +192,37 @@ Parallel execution is configured using TestNG and allows the same test suite to 
 
 ## 🏗 Framework Architecture
 
+### High-Level Execution Flow
+
+```
+Test Case (Thread)
+   ↓
+Page Object (UI actions)
+   ↓
+Self-Healing Engine
+   ├─ Try Healed Locator (Highest Confidence)
+   │    ├─ Success → Increase Score
+   │    └─ Failure → Decrease Score
+   ↓
+Fallback Locators (Sequential)
+   ├─ Success → Save & Increase Score
+   └─ Failure → Try Next Locator
+   ↓
+Healing Store (JSON)
+   ├─ Persist Locator + Confidence
+   └─ Read Best Locator for Next Run
+   ↓
+ThreadLocal WebDriver
+   ↓
+Browser Instance
+```
+
+This flow ensures that **each test thread**:
+
+* Uses its **own browser instance**
+* Learns independently
+* Improves locator reliability over time
+
 ```
 Test Case (Thread)
    ↓
@@ -139,24 +230,14 @@ Page Object
    ↓
 Self-Healing Logic
    ↓
+Healing Store (JSON)
+   ↓
 ThreadLocal WebDriver
    ↓
 Browser Instance
 ```
 
-Each test runs in its **own isolated browser session**, ensuring no cross-thread interference and stable parallel execution.
-
----
-
-## ❌ Negative Test Scenario (Proof of Healing)
-
-A dedicated negative test case demonstrates self-healing behavior:
-
-* The **primary locator** for the login button is intentionally incorrect
-* Selenium fails to locate the element using the primary locator
-* The framework automatically retries using **fallback locators**
-* A valid fallback locator succeeds
-* The test continues execution **without failure**
+Each test runs in its **own isolated browser session**, ensuring stable and reliable parallel execution.
 
 ---
 
@@ -166,15 +247,15 @@ A dedicated negative test case demonstrates self-healing behavior:
 
 * Java 17 or higher
 * Maven installed
-* Google Chrome / Microsoft Edge browser
+* Chrome / Edge browser
 
-### Test Execution
+### Execution
 
 ```bash
 mvn clean test
 ```
 
-### 🌐 Test Application
+### Test Application
 
 ```
 https://www.saucedemo.com
@@ -187,11 +268,11 @@ https://www.saucedemo.com
 ```
 src/main/java
  ├── base        → Driver & ThreadLocal management
- ├── logic       → Self-healing utilities
+ ├── logic       → Self-healing & learning logic
  ├── pages       → Page Object classes
 
 src/test/java
- ├── tests       → E2E and functional test cases
+ ├── tests       → End-to-end and functional tests
  ├── listeners   → Reporting and screenshots
 ```
 
@@ -199,25 +280,31 @@ src/test/java
 
 ## ⚠️ Known Limitations
 
-* Locator fallback order is static (no confidence scoring yet)
-* Successful fallback locators are not persisted
-* No AI/DOM similarity-based healing in Stage 1
+* Locator healing is deterministic (not AI-based)
+* DOM similarity matching is not implemented
+* Healing decisions are rule-based by design
 
 ---
 
-## 🚀 Future Enhancements
+## 🚀 Future Enhancements (Stage 3 Ideas)
 
-* Persist successful fallback locators for future runs
-* Locator confidence scoring
-* External locator storage (JSON / YAML)
-* Smarter healing strategy based on historical success
-* Cross-browser self-healing
+* Smarter locator ordering rules (ID vs XPath preference)
+* Time-based confidence decay
+* Externalized locator definitions
 * CI integration with Jenkins / GitHub Actions
 
 ---
 
 ## 📌 Summary
 
-This project demonstrates a **practical, simple Selenium automation framework** with **custom self-healing logic and thread-safe parallel execution**. It addresses real-world automation challenges while keeping the implementation simple, transparent, and fully under developer control.
+This project demonstrates a **real-world, learning Selenium automation framework** that:
+
+* Heals broken locators
+* Learns from execution history
+* Adapts over time
+* Runs safely in parallel
+* Explains its behavior clearly through reports
+
+The framework is intentionally kept **simple, transparent**, focusing on strong fundamentals rather than hidden magic.
 
 ⭐ If you find this project useful, feel free to fork or contribute.
