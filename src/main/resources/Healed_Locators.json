@@ -1,1 +1,1 @@
-{"password":{"xpath://input[@placeholder='Passwordd']":0,"id:password":1},"loginBtn":{"xpath://input[@value='Login']":1},"userName":{"xpath://input[@placeholder='Username']":1}}
+{"password":{"xpath://input[@placeholder='Passwordd']":0,"id:passwor":0,"css:.form_input[placeholder=\"Password\"]":4,"css:input[placeholder=\"Password\"]":1},"loginBtn":{"xpath://input[@value='Loginn']":0,"css:#login-button":5},"userName":{"xpath://input[@placeholder='Usernameee']":0,"css:#user-name":5}}

@@ -39,7 +39,7 @@ public class HealingStore {
 			Map<String, Map<String, Integer>> data = readFile();
 			data.putIfAbsent(elementName, new HashMap<>());
 			Map<String, Integer> locatorMap = data.get(elementName);
-			int currentScore = locatorMap.getOrDefault(locatorMap, 0);
+			int currentScore = locatorMap.getOrDefault(locator, 0);
 			if (currentScore < finalMaxScore)
 				locatorMap.put(locator, currentScore + 1);
 			else

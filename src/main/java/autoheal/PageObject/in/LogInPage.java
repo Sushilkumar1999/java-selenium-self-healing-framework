@@ -15,14 +15,14 @@ public class LogInPage {
 	}
 
 	// Possible locators for LoginButton in LoginPage.
-	String[] userNameLocator = { "id:user-namee", "xpath://input[@placeholder='Username']" };
-	String[] passWord = { "id:password", "xpath://input[@placeholder='Password']" };
+	String[] userNameLocator = { "id:user-namee", "xpath://input[@placeholder='Usernam']" };
+	String[] passWord = { "id:passwor", "xpath://input[@placeholder='Passwordd']" };
 	// In LoginButtonLocator the primary locator (id:login-buttonn) is deliberately
 	// broken.
 	// If it fails, the framework automatically retries the secondary
 	// locator("xpath://input[@value='Login']").
 	// and proceeds with execution instead of failing the test.
-	String[] LoginButtonLocator = { "id:login-buttonn", "xpath://input[@value='Login']" };
+	String[] LoginButtonLocator = { "id:login-buttonn", "xpath://input[@value='Loginn']" };
 
 	public void goTo(String URL) {
 		driver.get(URL);
