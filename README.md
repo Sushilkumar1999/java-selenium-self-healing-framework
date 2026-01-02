@@ -184,6 +184,7 @@ AI Advisor (Stage 3 – optional)
    ↓
 ThreadLocal WebDriver
 ```
+<img width="1406" height="747" alt="canvas" src="https://github.com/user-attachments/assets/fcdc3b7c-edcc-4081-b841-4be5984091db" />
 
 ---
 
